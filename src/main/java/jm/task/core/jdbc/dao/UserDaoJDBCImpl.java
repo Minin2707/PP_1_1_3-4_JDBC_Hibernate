@@ -44,14 +44,16 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+        try{
             connection.setAutoCommit(false);
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
-            preparedStatement.setString(2,lastName);
-            preparedStatement.setByte(3,age);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
             connection.commit();
-//            connection.setAutoCommit(true);
+        }
         } catch (SQLException e){
             e.printStackTrace();
             try{
@@ -59,25 +61,39 @@ public class UserDaoJDBCImpl implements UserDao {
             }catch (SQLException sqlException){
                 sqlException.printStackTrace();
             }
+        }finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     @Override
     public void removeUserById(long id) {
         String sql = "DELETE FROM users WHERE id = ?";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-//            connection.setAutoCommit(false);
+        try{
+            connection.setAutoCommit(false);
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-//            connection.setAutoCommit(true);
+        }
         }catch (SQLException e){
             e.printStackTrace();
             try {
                 connection.rollback();
-            }catch (SQLException e1){
-                e1.printStackTrace();
+            }catch (SQLException sqlException){
+                sqlException.printStackTrace();
+            }
+        }finally {
+            try {
+                connection.setAutoCommit(true);
+            }catch (SQLException e){
+                e.printStackTrace();
             }
         }
     }

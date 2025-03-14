@@ -11,7 +11,9 @@ public class Util {
     private static final String url = "jdbc:mysql://localhost:3306/mybase";
     private static Connection connection;
 
-    private Util(){}
+    private Util(){
+        throw new UnsupportedOperationException("Запрещено создание экземпляров этого класса!");
+    }
 
     public static Connection getConnection() {
         connection = null;
