@@ -44,16 +44,14 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
-        try{
-            connection.setAutoCommit(false);
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            connection.setAutoCommit(false);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
             connection.commit();
-        }
         } catch (SQLException e){
             e.printStackTrace();
             try{
@@ -73,16 +71,13 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         String sql = "DELETE FROM users WHERE id = ?";
-        try{
-            connection.setAutoCommit(false);
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
+            connection.setAutoCommit(false);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-        }
-        }catch (SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
             try {
                 connection.rollback();
